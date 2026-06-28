@@ -13,7 +13,9 @@ async def scan_devices():
             or "triones" in d.name.lower()
             or "led" in d.name.lower()
         ):
-            print(f"Знайдено стрічку! Назва: {d.name}, MAC-адреса: {d.address}")
+            print(
+                f"Знайдено стрічку! Назва: {d.name}, MAC-адреса: {d.address}"
+                )
         else:
             print(f"Інший пристрій: {d.name} - {d.address}")
 

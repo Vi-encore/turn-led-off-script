@@ -1,24 +1,25 @@
 import asyncio
 import logging
 import os
-from bleak import BleakClient
+from bleak import BleakClient, BleakError
 from dotenv import load_dotenv
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE = os.path.join(SCRIPT_DIR, "led_turn_on.log")
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
+LOGGER.propagate = False
 
 # Налаштування логування для вимкнення
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
+if not LOGGER.handlers:
+    LOGGER.addHandler(
         logging.FileHandler(
             LOG_FILE,
             encoding="utf-8",
-        ),
-        logging.StreamHandler(),  # Залишаємо вивід у консоль також
-    ],
-)
+        )
+    )
+    LOGGER.addHandler(logging.StreamHandler())
+    # Залишаємо вивід у консоль також
 
 load_dotenv(
     os.path.join(
@@ -37,7 +38,7 @@ CMD_ON = bytearray([0x7E, 0x04, 0x04, 0x01, 0x00, 0x00, 0xFF, 0x00, 0xEF])
 async def turn_on_led():
     max_retries = 3  # Кількість спроб вимкнення
     for attempt in range(max_retries):
-        logging.info(
+        LOGGER.info(
             "Спроба підключення %s з %s: Підключаюся до %s...",
             attempt,
             max_retries,
@@ -48,9 +49,9 @@ async def turn_on_led():
             # було більше часу на пошук
             async with BleakClient(MAC_ADDRESS, timeout=10.0) as client:
                 if client.is_connected:
-                    logging.info(
+                    LOGGER.info(
                         "Підключено! Відправляю команду на ввімкнення..."
-                    )
+                        )
 
                     # Додано response=False для уникнення помилок
                     # при розриві з'єднання
@@ -59,14 +60,14 @@ async def turn_on_led():
                     )
                     await asyncio.sleep(0.3)
 
-                    logging.info("Стрічку успішно ввімкнено.")
-        except Exception as e:
-            logging.error(f"Помилка під час спроби {attempt + 1}: {e}")
+                    LOGGER.info("Стрічку успішно ввімкнено.")
+        except (BleakError, OSError):
+            LOGGER.exception("Помилка під час спроби %s", attempt + 1)
             if attempt < max_retries - 1:
-                logging.info("Чекаю 2 секунди перед наступною спробою...")
+                LOGGER.info("Чекаю 2 секунди перед наступною спробою...")
                 await asyncio.sleep(2)  # Затримка перед повторною спробою
 
-    logging.error("Не вдалося вимкнути стрічку після всіх спроб.")
+    LOGGER.error("Не вдалося вимкнути стрічку після всіх спроб.")
 
 
 if __name__ == "__main__":

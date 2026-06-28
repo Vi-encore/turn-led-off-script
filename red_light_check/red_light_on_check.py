@@ -1,5 +1,4 @@
 import winreg
-import time
 
 # Шлях до бінарного ключа нічного світла в реєстрі Windows
 REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate"
