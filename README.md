@@ -25,7 +25,7 @@ Each script writes its own log file next to the script, for example `turn_on/led
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/Vi-encore/turn-led-off-script.git
    cd your-repo-name
    ```
 
