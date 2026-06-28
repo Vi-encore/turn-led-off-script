@@ -15,6 +15,7 @@ logging.basicConfig(
         logging.FileHandler(LOG_FILE, encoding="utf-8"),
         logging.StreamHandler(),  # Залишаємо вивід у консоль для зручності
     ],
+    force=True,
 )
 
 

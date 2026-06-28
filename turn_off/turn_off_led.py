@@ -6,12 +6,16 @@ from dotenv import load_dotenv
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE = os.path.join(SCRIPT_DIR, "led_turn_off.log")
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("led_turn_off")
 LOGGER.setLevel(logging.INFO)
 LOGGER.propagate = False
 
 
 # Налаштування логування для вимкнення
+# Очищуємо старі обробники, щоб уникнути дублювання
+for handler in LOGGER.handlers[:]:
+    LOGGER.removeHandler(handler)
+
 if not LOGGER.handlers:
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     file_handler = logging.FileHandler(
@@ -61,8 +65,8 @@ async def turn_off_led():
                     await asyncio.sleep(0.3)
                     LOGGER.info("Стрічку вимкнено успішно.")
                     return True  # Якщо успішно, виходимо з функції
-        except BleakError:
-            LOGGER.exception("Помилка під час спроби %s", attempt + 1)
+        except BleakError as e:
+            LOGGER.error("Помилка під час спроби %s: %s", attempt + 1, str(e))
             if attempt < max_retries - 1:
                 LOGGER.info("Чекаю 2 секунди перед наступною спробою...")
                 await asyncio.sleep(2)  # Затримка перед повторною спробою
