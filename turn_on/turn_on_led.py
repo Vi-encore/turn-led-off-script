@@ -12,14 +12,17 @@ LOGGER.propagate = False
 
 # Налаштування логування для вимкнення
 if not LOGGER.handlers:
-    LOGGER.addHandler(
-        logging.FileHandler(
-            LOG_FILE,
-            encoding="utf-8",
-        )
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    file_handler = logging.FileHandler(
+        LOG_FILE,
+        encoding="utf-8",
     )
-    LOGGER.addHandler(logging.StreamHandler())
-    # Залишаємо вивід у консоль також
+    file_handler.setFormatter(formatter)
+    LOGGER.addHandler(file_handler)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    LOGGER.addHandler(stream_handler)
 
 load_dotenv(
     os.path.join(
@@ -49,9 +52,7 @@ async def turn_on_led():
             # було більше часу на пошук
             async with BleakClient(MAC_ADDRESS, timeout=10.0) as client:
                 if client.is_connected:
-                    LOGGER.info(
-                        "Підключено! Відправляю команду на ввімкнення..."
-                        )
+                    LOGGER.info("Підключено! Відправляю команду на ввімкнення...")
 
                     # Додано response=False для уникнення помилок
                     # при розриві з'єднання
