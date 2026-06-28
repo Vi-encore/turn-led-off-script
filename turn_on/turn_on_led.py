@@ -40,7 +40,7 @@ async def turn_on_led():
     for attempt in range(max_retries):
         LOGGER.info(
             "Спроба підключення %s з %s: Підключаюся до %s...",
-            attempt,
+            attempt + 1,
             max_retries,
             MAC_ADDRESS,
         )
@@ -61,13 +61,15 @@ async def turn_on_led():
                     await asyncio.sleep(0.3)
 
                     LOGGER.info("Стрічку успішно ввімкнено.")
-        except (BleakError, OSError):
+                    return True
+        except BleakError:
             LOGGER.exception("Помилка під час спроби %s", attempt + 1)
             if attempt < max_retries - 1:
                 LOGGER.info("Чекаю 2 секунди перед наступною спробою...")
                 await asyncio.sleep(2)  # Затримка перед повторною спробою
 
     LOGGER.error("Не вдалося вимкнути стрічку після всіх спроб.")
+    return False
 
 
 if __name__ == "__main__":
