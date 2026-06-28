@@ -52,7 +52,9 @@ async def turn_on_led():
             # було більше часу на пошук
             async with BleakClient(MAC_ADDRESS, timeout=10.0) as client:
                 if client.is_connected:
-                    LOGGER.info("Підключено! Відправляю команду на ввімкнення...")
+                    LOGGER.info(
+                        "Підключено! Відправляю команду на ввімкнення..."
+                        )
 
                     # Додано response=False для уникнення помилок
                     # при розриві з'єднання
