@@ -97,4 +97,6 @@ Now, simply use this shortcut whenever you want to turn off your PC and the LED 
 
 Currently, the scripts run strictly as automated background tasks. However, this repository will soon be upgraded!
 
+I plan to utilize a `bledom` library for controlling BLEDOM controllers so I can change brightness, link it to time of the day, mood, music or whatever I want😁
+
 I plan to build a **Desktop GUI Application** using **Electron.js**. The future Electron app will serve as a control panel for manual color picking, brightness adjustments, and toggling. It will utilize Node.js `child_process` to seamlessly call these existing Python scripts, combining the reliability of Python's `bleak` on Windows with a modern JavaScript UI. Stay tuned!
