@@ -8,6 +8,7 @@ __pycache__/
 
 # bat files
 *.bat
+*.bat - Ярлик.lnk
 
 # Distribution / packaging
 .Python
